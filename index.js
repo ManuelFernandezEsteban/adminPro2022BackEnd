@@ -17,17 +17,17 @@ const app = express();
 
 app.use(cors());
 
+//lectura y parseo JSON
+app.use(express.json());
+
 //base datos
 dbConnection();
 
 //rutas
-app.get('/',(req,res)=>{
 
-    res.json({
-        ok:true,
-        msg:"Hola mundo"
-    })
-})
+app.use('/api/usuarios',require('./routes/usuarios.routes'));
+app.use('/api/login',require('./routes/auth.routes'));
+
 
 
 app.listen(process.env.PORT,()=>{
