@@ -3,13 +3,22 @@ const { response } = require('express');
 const bcrypt = require('bcryptjs');
 const generarJWT = require('../helpers/jwt');
 
-const getUsuarios = async (req, res) => {
+const getUsuarios = async (req, res=response) => {
 
-    const usuarios = await Usuario.find({}, 'nombre apellidos email google role');
+    const desde = Number (req.query.desde) || 0;
+
+    const [usuarios,total] = await Promise.all([
+        Usuario.find({}, 'nombre apellidos email google role img')
+        .skip(desde)                  
+        .limit(5),
+        
+        Usuario.countDocuments()
+    ]);
 
     res.json({
         ok: true,
-        usuarios
+        usuarios,
+        total
     })
 }
 
